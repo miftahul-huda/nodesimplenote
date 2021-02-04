@@ -4,8 +4,8 @@ const CategoryModel  = require( './modules/models/categorymodel')
 const { Sequelize, Model, DataTypes } = require('sequelize');
 
 
-const sequelize = new Sequelize('nodesimplenote', 'nodeuser', 'rotikeju98', {
-    host: 'localhost',
+const sequelize = new Sequelize(process.env.DBNAME, process.env.DBUSER, process.env.DBPASSWORD, {
+    host: process.env.DBHOST,
     dialect: 'postgres',
     logging: false
 });
