@@ -1,0 +1,8 @@
+[
+    { "path" :  "/", "router"  : "./routes/index" },
+    { "path" :  "/project", "router"  : "./routes/project" },
+    { "path" :  "/category", "router"  : "./routes/category" },
+    { "path" :  "/note", "router"  : "./routes/note" },
+    { "path" :  "/web", "router"  : "./routes/web" }
+    
+]

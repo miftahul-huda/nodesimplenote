@@ -1,0 +1,34 @@
+const NoteModel  = require( './modules/models/notemodel')
+const ProjectModel  = require( './modules/models/projectmodel')
+const CategoryModel  = require( './modules/models/categorymodel')
+const { Sequelize, Model, DataTypes } = require('sequelize');
+
+
+const sequelize = new Sequelize('nodesimplenote', 'nodeuser', 'rotikeju98', {
+    host: 'localhost',
+    dialect: 'postgres',
+    logging: false
+});
+  
+
+class Initialization {
+    static async initializeDatabase(){
+
+        let force = false;
+
+        ProjectModel.initialize(sequelize, false);
+        CategoryModel.initialize(sequelize, false);
+        NoteModel.initialize(sequelize, false);
+
+        NoteModel.belongsTo(CategoryModel, {foreignKey: 'category_id'});
+        NoteModel.belongsTo(ProjectModel, {foreignKey: 'project_id'});
+
+        await sequelize.sync();
+
+    }
+}
+
+module.exports = Initialization
+
+
+

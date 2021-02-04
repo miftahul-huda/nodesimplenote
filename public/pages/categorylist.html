@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<%- include ("./headerscript.html") -%>
+</head>
+<body>
+<%- include ("./header.html") -%>
+
+    <div class="card-body">
+        <div class="position-relative form-group">
+            <div id="btn-add" style="width: 40px;height: 40px; cursor: pointer; opacity: 0.7" onmouseover="this.style.opacity=1"  onmouseout="this.style.opacity=0.7">
+                <div style="background-image: url(/images/plus.png); background-size: auto 100%; background-repeat: no-repeat; width: 100%; height: 100%">
+
+                </div>
+            </div>
+        </div>
+        <table id="datatable"></table>
+
+    </div>
+
+<%- include ("./footer.html") -%>
+</body>
+
+<script>
+$(document).ready(function(){
+    loadCategories();
+    $("#btn-add").click(function(e){
+        location = 'category/add'
+    });
+
+})
+
+var table = null;
+function loadCategories()
+{
+    var url = "/category";
+
+    $.get(url, function(response){
+        if(response.success)
+        {
+            var categories = response.payload;
+            console.log(categories)
+
+            for(var i=0; i < categories.length; i++)
+            {
+                categories[i].edit = "<div style='cursor: pointer' onclick='editCategory(" + categories[i].id + ")'><image src='/images/edit.png'></div>"
+                categories[i].delete = "<div style='cursor: pointer' onclick='deleteCategory(" + categories[i].id + ")'><image src='/images/trash.png'></div>"
+            }
+
+            if(table != null)
+                table.destroy();
+
+            table = $("#datatable").DataTable({
+                data: categories,
+                columns: [
+                    { title: "Name", data:"category_name"},
+                    { title: "Description", data: "description"},
+                    { title: "" , data: "edit"},
+                    { title: "" , data: "delete"},
+                ]
+            })
+        }
+        else{
+            alert("Error : " + JSON.stringify(response.error));
+        }
+    });    
+}
+
+
+function deleteCategory(i)
+{
+
+    var url = "/category/delete/" + i;
+    $.get(url,  function(response){
+        if(response.success)
+        {
+            toastr.info("Category has been deleted", "Success", {timeOut: 1000})
+            loadCategories();
+        }
+        else{
+            alert("Error : " + JSON.stringify(response.error));
+        }
+    });
+}
+
+function editCategory(i)
+{
+    location = "/web/category/edit/" + i;
+}
+
+
+</script>
+</html>
+
+

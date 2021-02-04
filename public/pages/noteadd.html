@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<%- include ("./headerscript.html") -%>
+</head>
+<body>
+<%- include ("./header.html") -%>
+
+    <div class="card-body">
+        <form>
+            <div class="position-relative form-group">
+                <label for="title" class="">Title</label>
+                <input id="title" placeholder="Enter title for the note" type="text" class="form-control">
+            </div>
+            <div class="position-relative form-group">
+                <label for="short_desc" class="">Short Description</label>
+                <input id="short_desc" placeholder="Enter short description" type="text" class="form-control">
+            </div>
+            <div class="position-relative form-group">
+                <label for="content" class="">Content</label>
+                <textarea id="content" placeholder="" class="form-control">
+                </textarea>
+            </div>
+            <div class="position-relative form-group">
+                <label for="tags" class="">Tags</label>
+                <input id="tags" placeholder="Enter tags for this note" type="text" class="form-control">
+            </div>
+            <div class="position-relative form-group" style="display: flex;">
+                <div class="form-group" style="width: 100%;">
+                    <label>Project</label>
+                    <select id="project_id" class="form-control select2" style="width: 100%;">
+                      <option value="postgresql" selected="selected">PostgreSQL</option>
+                      <option value="mysql">MySQL</option>
+                      <option value="sqlite">SQLite</option>
+                      <option value="mssql">MSSQL</option>
+                    </select>
+                </div>
+            </div>
+            <div class="position-relative form-group" style="display: flex;">
+                <div class="form-group" style="width: 100%;">
+                    <label>Category</label>
+                    <select id="category_id" class="form-control select2" style="width: 100%;">
+                      <option value="postgresql" selected="selected">PostgreSQL</option>
+                      <option value="mysql">MySQL</option>
+                      <option value="sqlite">SQLite</option>
+                      <option value="mssql">MSSQL</option>
+                    </select>
+                </div>
+            </div>
+            <div style="width: 100%; display: flex" class="position-relative form-group">
+                <div style="width: 45%; flex:1">
+                    <button id="btn-register" style="width: 100%" type="button" class="btn btn-block btn-primary">Save</button>
+                </div>
+                <div style="width:1%"></div>
+                <div style="width: 45%; flex:1">
+                    <button id="btn-back" style="width: 100%" type="button" class="btn btn-block btn-primary">Back</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+<%- include ("./footer.html") -%>
+</body>
+
+<script>
+    $(document).ready(function() {
+
+
+        loadProjects(function(projects){
+            console.log(projects);
+            displayProjects(projects);
+            loadCategories(function(categories){
+                displayCategories(categories);
+                <% if( mode == "edit" ) { %>
+                loadNote(<%=id %>, function(note){
+                    displayNote(note);
+                }, function(error){
+                    errorLoadNote(error);
+                });
+                <% } %>
+
+            })
+        })
+
+
+        $("#btn-register").click(function(){
+            registerNote(<%=id %>);
+        })
+
+        $("#btn-back").click(function(){
+            location = "/web/notes";
+        })
+    });
+
+    function loadNote(id, callback, callbackError)
+    {
+        var url = "/note/get/" + id;
+        console.log(url);
+        $.get(url, function(response){
+            
+            if(callback != null)
+            {
+                console.log(response.payload);
+                callback(response.payload);
+            }
+        });
+    }
+
+    function displayNote(note)
+    {
+        console.log("Note")
+        console.log(note);
+        $("#title").val(note.title);
+        $("#short_desc").val(note.short_desc);
+        $("#content").summernote('code', note.content);
+        $("#tags").val(note.tags);
+        $("#project_id").val(note.project_id);
+        $("#category_id").val(note.category_id);
+    }
+
+    function errorLoadNote(err)
+    {
+        toastr.info(JSON.stringify(err));
+    }
+
+    function registerNote(id)
+    {
+        var o = {};
+        o.title = $("#title").val();
+        o.short_desc = $("#short_desc").val();
+        o.content = $("#content").summernote('code');
+        o.tags = $("#tags").val();
+        o.project_id = $("#project_id").val();
+        o.category_id = $("#category_id").val();
+
+        console.log(JSON.stringify(o));
+
+        <% if( mode == "edit" ) { %>
+        var url = API_HOST + "/note/update/" + id;
+        <% } %>
+
+        <% if( mode != "edit" ) { %>
+        var url = API_HOST + "/note/create";
+        <% } %>
+
+        $.post(url, JSON.stringify(o), function(response){
+            if(response.success)
+            {
+
+                toastr.options.onHidden = function() { location = "/web/notes"; }
+                toastr.info("Note has been saved", "Success", {timeOut: 1000})
+            }
+            else
+            {
+                toastr.info(response.message);
+            }
+        })
+    }
+
+    function loadProjects(callback)
+    {
+        var url = "/project";
+        $.get(url, function(response){
+            var projects = response.payload;
+            if(callback != null)
+                callback(projects);
+        });
+    }
+
+    function loadCategories(callback)
+    {
+        var url = "/category";
+        $.get(url, function(response){
+            var categories = response.payload;
+            if(callback != null)
+                callback(categories);
+        });
+    }
+
+    function displayProjects(projects)
+    {
+        $("#project_id").html("");
+        projects.map(function(item){
+            $("#project_id").append("<option value='" + item.id + "'>" + item.project_name + "</option>")
+        });
+    }
+
+    function displayCategories(categories)
+    {
+        $("#category_id").html("");
+        categories.map(function(item){
+            $("#category_id").append("<option value='" + item.id + "'>" + item.category_name + "</option>")
+        });
+    }
+
+</script>
+</html>
+
+

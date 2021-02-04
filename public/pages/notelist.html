@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<%- include ("./headerscript.html") -%>
+</head>
+<body>
+<%- include ("./header.html") -%>
+
+    <div class="card-body">
+        <div class="position-relative form-group">
+            <div id="btn-add" style="width: 40px;height: 40px; cursor: pointer; opacity: 0.7" onmouseover="this.style.opacity=1"  onmouseout="this.style.opacity=0.7">
+                <div style="background-image: url(/images/plus.png); background-size: auto 100%; background-repeat: no-repeat; width: 100%; height: 100%">
+
+                </div>
+            </div>
+        </div>
+        <table id="datatable"></table>
+
+    </div>
+
+<%- include ("./footer.html") -%>
+</body>
+
+<script>
+$(document).ready(function(){
+    loadNotes();
+    $("#btn-add").click(function(e){
+        location = 'note/add'
+    });
+})
+
+var table = null;
+function loadNotes()
+{
+    var url = "/note";
+
+    $.get(url, function(response){
+        if(response.success)
+        {
+            var notes = response.payload;
+            console.log(notes)
+
+            for(var i=0; i < notes.length; i++)
+            {
+                notes[i].edit = "<div style='cursor: pointer' onclick='editNote(" + notes[i].id + ")'><image src='/images/edit.png'></div>"
+                notes[i].delete = "<div style='cursor: pointer' onclick='deleteNote(" + notes[i].id + ")'><image src='/images/trash.png'></div>"
+            }
+
+            if(table != null)
+                table.destroy();
+
+            table = $("#datatable").DataTable({
+                data: notes,
+                columns: [
+                    { title: "Title", data:"title"},
+                    { title: "Short Desc", data: "short_desc"},
+                    { title: "Tags" , data: "tags"},
+                    { title: "Category" , data: "category.category_name"},
+                    { title: "Project" , data: "project.project_name"},
+                    { title: "Created At" , data: "createdAt"},
+                    { title: "" , data: "edit"},
+                    { title: "" , data: "delete"},
+                ]
+            })
+        }
+        else{
+            alert("Error : " + JSON.stringify(response.error));
+        }
+    });    
+}
+
+
+function deleteNote(i)
+{
+
+    var url = "/note/delete/" + i;
+    $.get(url,  function(response){
+        if(response.success)
+        {
+            toastr.info("Note has been deleted", "Success", {timeOut: 1000})
+            loadNotes();
+        }
+        else{
+            alert("Error : " + JSON.stringify(response.error));
+        }
+    });
+}
+
+function editNote(i)
+{
+    location = "/web/note/edit/" + i;
+}
+
+</script>
+</html>
+
+

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<%- include ("./headerscript.html") -%>
+</head>
+<body>
+<%- include ("./header.html") -%>
+
+    <div class="card-body">
+        <form>
+            <div class="position-relative form-group">
+                <label for="category_name class="">Category Name</label>
+                <input id="category_name" placeholder="Name of the category" type="text" class="form-control">
+            </div>
+            <div class="position-relative form-group">
+                <label for="description class="">Description</label>
+                <input id="description" placeholder="Description" type="text" class="form-control">
+            </div>
+            <div style="width: 100%; display: flex" class="position-relative form-group">
+                <div style="width: 45%; flex:1">
+                    <button id="btn-register" style="width: 100%" type="button" class="btn btn-block btn-primary">Save</button>
+                </div>
+                <div style="width:1%"></div>
+                <div style="width: 45%; flex:1">
+                    <button id="btn-back" style="width: 100%" type="button" class="btn btn-block btn-primary">Back</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+<%- include ("./footer.html") -%>
+</body>
+
+<script>
+    $(document).ready(function() {
+
+        <% if( mode == "edit" ) { %>
+        loadCategory(<%=id %>, function(category){
+            displayCategory(category);
+        }, function(error){
+            errorLoadCategory(error);
+        });
+        <% } %>
+
+        $("#btn-register").click(function(){
+            registerCategory(<%=id %>);
+        })
+
+        $("#btn-back").click(function(){
+            location = "/web/categories";
+        })
+
+
+    });
+
+    function loadCategory(id, callback, callbackError)
+    {
+        var url = "/category/get/" + id;
+        $.get(url, function(response){
+            
+            if(callback != null)
+            {
+                console.log(response.payload);
+                callback(response.payload);
+            }
+        });
+    }
+
+    function displayCategory(category)
+    {
+        console.log(category);
+        $("#category_name").val(category.category_name);
+        $("#description").val(category.description);
+       
+    }
+
+    function errorLoadCategory(err)
+    {
+        toastr.info(JSON.stringify(err));
+    }
+
+    function registerCategory(id)
+    {
+        var o = {};
+        o.category_name = $("#category_name").val();
+        o.description = $("#description").val();
+
+        console.log(JSON.stringify(o));
+
+        <% if( mode == "edit" ) { %>
+        var url = API_HOST + "/category/update/" + id;
+        <% } %>
+
+        <% if( mode != "edit" ) { %>
+        var url = API_HOST + "/category/create";
+        <% } %>
+
+        $.post(url, JSON.stringify(o), function(response){
+            if(response.success)
+            {
+
+                toastr.options.onHidden = function() { location = "/web/categories"; }
+                toastr.info("Category has been saved", "Success", {timeOut: 1000})
+            }
+            else
+            {
+                toastr.info(response.message);
+            }
+        })
+    }
+
+
+
+</script>
+</html>
+
+
