@@ -1,9 +1,0 @@
-service: node-simple-note
-runtime: nodejs12
-env: standard
-env_variables:
-  PORT: "8080"
-  DBHOST: ""
-  DBNAME: ""
-  DBUSER: ""
-  DBPASSWORD: ""
