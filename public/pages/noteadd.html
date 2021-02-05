@@ -57,7 +57,7 @@
 <script>
     $(document).ready(function() {
 
-
+        $("#loader").show();
         loadProjects(function(projects){
             console.log(projects);
             displayProjects(projects);
@@ -65,9 +65,11 @@
                 displayCategories(categories);
                 <% if( mode == "edit" ) { %>
                 loadNote(<%=id %>, function(note){
+                    $("#loader").hide();
                     displayNote(note);
                 }, function(error){
                     errorLoadNote(error);
+                    $("#loader").hide();
                 });
                 <% } %>
 
@@ -88,8 +90,9 @@
     {
         var url = "/note/get/" + id;
         console.log(url);
+        $("#loader").show();
         $.get(url, function(response){
-            
+            $("#loader").hide();
             if(callback != null)
             {
                 console.log(response.payload);
@@ -164,7 +167,9 @@
         var url = API_HOST + "/note/create";
         <% } %>
 
+        $("#loader").show();
         $.post(url, JSON.stringify(o), function(response){
+            $("#loader").hide();
             if(response.success)
             {
 
@@ -181,7 +186,9 @@
     function loadProjects(callback)
     {
         var url = "/project";
+        $("#loader").show();
         $.get(url, function(response){
+            $("#loader").hide();
             var projects = response.payload;
             if(callback != null)
                 callback(projects);
@@ -191,7 +198,9 @@
     function loadCategories(callback)
     {
         var url = "/category";
+        $("#loader").show();
         $.get(url, function(response){
+            $("#loader").hide();
             var categories = response.payload;
             if(callback != null)
                 callback(categories);

@@ -56,8 +56,9 @@
     function loadCategory(id, callback, callbackError)
     {
         var url = "/category/get/" + id;
+        $("#loader").show();
         $.get(url, function(response){
-            
+            $("#loader").hide();
             if(callback != null)
             {
                 console.log(response.payload);
@@ -95,7 +96,9 @@
         var url = API_HOST + "/category/create";
         <% } %>
 
+        $("#loader").show();
         $.post(url, JSON.stringify(o), function(response){
+            $("#loader").hide();
             if(response.success)
             {
 

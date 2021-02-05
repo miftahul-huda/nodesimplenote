@@ -14,6 +14,20 @@
                 </div>
             </div>
         </div>
+        <div class="position-relative form-group" style="display: flex;">
+
+            <div class="form-group" style="width: 40%;">
+                <label style="font-weight: bold;">Project</label>
+                <select id="project_id" class="form-control select2" style="width: 100%;">
+                </select>
+            </div>
+            <div style="width: 5%"></div>
+            <div class="form-group" style="width: 40%;">
+                <label style="font-weight: bold;">Category</label>
+                <select id="category_id" class="form-control select2" style="width: 100%;">
+                </select>
+            </div>
+        </div>
         <table id="datatable"></table>
 
     </div>
@@ -23,7 +37,22 @@
 
 <script>
 $(document).ready(function(){
-    loadNotes();
+    
+    loadProjects(function(projects){
+        displayProjects(projects);
+        loadCategories(function(categories){
+            displayCategories(categories);
+            loadNotes();
+        })
+    })
+    
+    $("#category_id").on("change", function(){
+        loadNotes();
+    });
+    $("#project_id").on("change", function(){
+        loadNotes();
+    });
+
     $("#btn-add").click(function(e){
         location = 'note/add'
     });
@@ -32,9 +61,15 @@ $(document).ready(function(){
 var table = null;
 function loadNotes()
 {
-    var url = "/note";
+    var project = $("#project_id").val();
+    var category = $("#category_id").val();
 
+    var url = "/note/find-by-project-category/" + project + "/" + category;
+    console.log(url);
+
+    $("#loader").show();
     $.get(url, function(response){
+        $("#loader").hide();
         if(response.success)
         {
             var notes = response.payload;
@@ -74,7 +109,9 @@ function deleteNote(i)
 {
 
     var url = "/note/delete/" + i;
+    $("#loader").show();
     $.get(url,  function(response){
+        $("#loader").hide();
         if(response.success)
         {
             toastr.info("Note has been deleted", "Success", {timeOut: 1000})
@@ -90,6 +127,48 @@ function editNote(i)
 {
     location = "/web/note/edit/" + i;
 }
+
+function loadProjects(callback)
+    {
+        var url = "/project";
+        $("#loader").show();
+        $.get(url, function(response){
+            $("#loader").hide();
+            var projects = response.payload;
+            if(callback != null)
+                callback(projects);
+        });
+    }
+
+    function loadCategories(callback)
+    {
+        var url = "/category";  
+        $("#loader").show();
+        $.get(url, function(response){
+            $("#loader").hide();
+            var categories = response.payload;
+            if(callback != null)
+                callback(categories);
+        });
+    }
+
+    function displayProjects(projects)
+    {
+        $("#project_id").html("");
+        $("#project_id").append("<option value='*'>All</option>")
+        projects.map(function(item){
+            $("#project_id").append("<option value='" + item.id + "'>" + item.project_name + "</option>")
+        });
+    }
+
+    function displayCategories(categories)
+    {
+        $("#category_id").html("");
+        $("#category_id").append("<option value='*'>All</option>")
+        categories.map(function(item){
+            $("#category_id").append("<option value='" + item.id + "'>" + item.category_name + "</option>")
+        });
+    }
 
 </script>
 </html>

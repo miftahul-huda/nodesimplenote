@@ -53,6 +53,27 @@ class NoteLogic {
         }
     }
 
+    static async findByProjectCategory(project, category, param)
+    {
+        try{
+
+
+            let notes  = await NoteModel.findAll({ 
+                where: this.getWhere(param, project, category),
+                attributes: [ 'id', 'title', 'short_desc', 'createdAt', 'tags','project_id' , 'category_id' ],
+                include: [
+                    {  model: CategoryModel, as: 'category' },
+                    {  model: ProjectModel, as: 'project' }
+            ]});
+            return { success: true, payload: notes }
+        }
+        catch (error)
+        {
+            console.log(error)
+            throw { success: false, message: '', error: error };
+        }
+    }
+
 
 
     static async findByKeyword(search, param)
@@ -78,6 +99,72 @@ class NoteLogic {
                         }
                     ]
                 }
+                ,
+                include: [
+                    {  model: CategoryModel, as: 'category' },
+                    {  model: ProjectModel, as: 'project' }
+                ]
+            })
+            return { success: true, payload: notes }
+        }
+        catch (error)
+        {
+            throw { success: false, message: '', error: error };
+        }
+    }
+
+    static getSeearchWhere(param, search, project, category)
+    {
+        var ands = [];
+        ands.push({
+            [Op.or] : [
+                {title: { [Op.like] : '%' + search + '%' }},
+                {short_desc: { [Op.like] : '%' + search + '%' }},
+                {content: { [Op.like] : '%' + search + '%' }},
+                {tags: { [Op.like] : '%' + search + '%' }}
+            ]
+        });
+
+        ands.push({
+            user : { [Op.like] : param.email }
+        });
+
+        if(project != "*")
+            ands.push({ project_id: project });
+
+        if(category != "*")
+            ands.push({ category_id: category });
+
+        var where = {
+            [Op.and] : ands
+        }
+        return where;
+    }
+
+    static getWhere(param, project, category)
+    {
+        var ands = [];
+        ands.push({user : {[Op.like] :  param.email }});
+
+
+        if(project != "*")
+            ands.push({ project_id: project });
+
+        if(category != "*")
+            ands.push({ category_id: category });
+
+        var  where = { [Op.and] : ands };
+        return where;
+
+    }
+
+    static async findByKeywordProjectCategory(search, project, category, param)
+    {
+        try{
+
+            let notes  = await NoteModel.findAll({
+                attributes:  [ 'id', 'title', 'short_desc', 'createdAt', 'tags','project_id' , 'category_id' ],
+                where: this.getSeearchWhere(param, search, project, category)
                 ,
                 include: [
                     {  model: CategoryModel, as: 'category' },

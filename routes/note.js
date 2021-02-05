@@ -24,9 +24,23 @@ router.post('/create', function (req, res){
 router.get('', function (req, res){
 
   var session = req.session;
-  NoteLogic.findAll({ email: session.email }).then(function (connections)
+  NoteLogic.findAll({ email: session.email }).then(function (notes)
   {
-    res.send(connections);
+    res.send(notes);
+  }).catch(function (err){
+    console.log("error")
+    res.send(err);
+  })
+})
+
+router.get('/find-by-project-category/:project/:category', function (req, res){
+  var session = req.session;
+  var category = req.params.category;
+  var project = req.params.project;
+
+  NoteLogic.findByProjectCategory(project, category, { email: session.email }).then(function (notes)
+  {
+    res.send(notes);
   }).catch(function (err){
     console.log("error")
     res.send(err);
@@ -36,9 +50,24 @@ router.get('', function (req, res){
 router.get('/:search', function (req, res){
   let search = req.params.search;
   var session = req.session;
-  NoteLogic.findAll(search, { email: session.email }).then(function (connections)
+  NoteLogic.findByKeyword(search, { email: session.email }).then(function (notes)
   {
-    res.send(connections);
+    res.send(notes);
+  }).catch(function (err){
+    console.log("error")
+    res.send(err);
+  })
+})
+
+router.get('/find-by-project-category/:search/:project/:category', function (req, res){
+  let search = req.params.search;
+  var session = req.session;
+  var category = req.params.category;
+  var project = req.params.project;
+
+  NoteLogic.findByKeywordProjectCategory(search, project, category, { email: session.email }).then(function (notes)
+  {
+    res.send(notes);
   }).catch(function (err){
     console.log("error")
     res.send(err);

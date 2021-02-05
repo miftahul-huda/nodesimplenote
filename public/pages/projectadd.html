@@ -58,8 +58,9 @@
     function loadProject(id, callback, callbackError)
     {
         var url = "/project/get/" + id;
+        $("#loader").show();
         $.get(url, function(response){
-            
+            $("#loader").hide();
             if(callback != null)
             {
                 console.log(response.payload);
@@ -98,7 +99,9 @@
         var url = API_HOST + "/project/create";
         <% } %>
 
+        $("#loader").show();
         $.post(url, JSON.stringify(o), function(response){
+            $("#loader").hide();
             if(response.success)
             {
 

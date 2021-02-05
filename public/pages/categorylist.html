@@ -35,7 +35,9 @@ function loadCategories()
 {
     var url = "/category";
 
+    $("#loader").show();
     $.get(url, function(response){
+        $("#loader").hide();
         if(response.success)
         {
             var categories = response.payload;

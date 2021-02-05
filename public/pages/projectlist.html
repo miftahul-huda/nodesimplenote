@@ -36,8 +36,9 @@ var table = null;
 function loadProjects()
 {
     var url = "/project";
-
+    $("#loader").show();
     $.get(url, function(response){
+        $("#loader").hide();
         if(response.success)
         {
             var projects = response.payload;
