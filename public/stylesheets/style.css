@@ -1,15 +1,15 @@
 body {
   padding: 50px;
-  font: 11pt "Tahoma", Helvetica, Arial, sans-serif;
+  font: 10pt "Verdana", Helvetica, Arial, sans-serif;
 }
 
 .form-control{
-  font: 11pt "Tahoma", Helvetica, Arial, sans-serif;  
+  font: 10pt "Verdana", Helvetica, Arial, sans-serif;  
   color: #666;
 }
 
 div{
-  font: 11pt "Tahoma", Helvetica, Arial, sans-serif;  
+  font: 10pt "Verdana", Helvetica, Arial, sans-serif;  
 }
 
 a {
@@ -101,4 +101,9 @@ div[id='menu*']
 .even
 {
   background-color: #eeeeee!important;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('/stylesheets/GothamBook.ttf'); /* IE9 Compat Modes */
 }
