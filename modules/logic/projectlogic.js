@@ -5,11 +5,12 @@ const { Op } = require("sequelize");
 
 class ProjectLogic {
 
-    static async create(project)
+    static async create(project, param)
     {
         let result = this.validateCreate(project);
         if(result.success){
             try {
+                project.user = param.email;
                 let newproject = await ProjectModel.create(project);
                 result.payload = newproject;
                 return  result;
@@ -27,10 +28,14 @@ class ProjectLogic {
 
     }
 
-    static async findAll()
+    static async findAll(param)
     {
         try{
-            let projects  = await ProjectModel.findAll();
+            let projects  = await ProjectModel.findAll({
+                where: {
+                    user: { [Op.like] : param.email}
+                }
+            });
             return { success: true, payload: projects }
         }
         catch (error)
@@ -42,15 +47,22 @@ class ProjectLogic {
 
 
 
-    static async findByKeyword(search)
+    static async findByKeyword(search, param)
     {
         try{
             let projects  = await ProjectModel.findAll({
                 where: {
-                    [Op.or] : [
-                        {project_name: { [Op.like] : '%' + search + '%' }},
-                        {client_name: { [Op.like] : '%' + search + '%' }},
-                        {info: { [Op.like] : '%' + search + '%' }}
+                    [Op.and] : 
+                    [
+                        {[Op.or] : [
+                            {project_name: { [Op.like] : '%' + search + '%' }},
+                            {client_name: { [Op.like] : '%' + search + '%' }},
+                            {info: { [Op.like] : '%' + search + '%' }}
+                        ]}
+                        ,
+                        {
+                            user: { [Op.like] : param.email }
+                        }
                     ]
 
                 }
@@ -63,12 +75,14 @@ class ProjectLogic {
         }
     }
 
-    static async get(id)
+    static async get(id, param)
     {
         try{
-            let projects  = await ProjectModel.findByPk(id);
-
-            return { success: true, payload: projects }
+            let project  = await ProjectModel.findByPk(id);
+            if(project.user != param.email)
+                return { success: false, payload: null, message: 'Not allowed for ' + param.email }
+            else
+                return { success: true, payload: project }
         }
         catch (error)
         {
@@ -76,7 +90,7 @@ class ProjectLogic {
         }
     }
 
-    static async update(id,  project)
+    static async update(id,  project, param)
     {
         let result = this.validate(project);
         if(result.success){
@@ -98,7 +112,7 @@ class ProjectLogic {
 
     }
 
-    static async delete(id)
+    static async delete(id, param)
     {
         try{
             let result  = await ProjectModel.destroy({ 

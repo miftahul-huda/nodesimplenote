@@ -8,7 +8,8 @@ class ProjectModel extends Model {
             client_name: DataTypes.STRING,
             description: DataTypes.TEXT,
             project_start_date: DataTypes.STRING,
-            project_end_date: DataTypes.STRING
+            project_end_date: DataTypes.STRING,
+            user: DataTypes.STRING
         }, 
         { sequelize, modelName: 'project', tableName: 'project', force: force });
     }

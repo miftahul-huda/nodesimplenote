@@ -7,7 +7,10 @@ const CategoryLogic = require('../modules/logic/categorylogic')
 router.post('/create', function (req, res){
   let category = req.body;
 
-  CategoryLogic.create(category).then(function (savedCategory)
+  var session = req.session;
+  category.user = session.email;
+
+  CategoryLogic.create(category, {email: session.email }).then(function (savedCategory)
   {
     res.send(savedCategory);
   }).catch(function (err){
@@ -18,7 +21,10 @@ router.post('/create', function (req, res){
 
 router.get('', function (req, res){
 
-  CategoryLogic.findAll().then(function (categorys)
+  var session = req.session;
+  
+
+  CategoryLogic.findAll({email: session.email}).then(function (categorys)
   {
     res.send(categorys);
   }).catch(function (err){
@@ -31,8 +37,9 @@ router.get('', function (req, res){
 
 router.get('/:search', function (req, res){
   let search = req.params.search;
+  var session = req.session;
 
-  CategoryLogic.findAll(search).then(function (categorys)
+  CategoryLogic.findAll(search, {email: session.email}).then(function (categorys)
   {
     res.send(categorys);
   }).catch(function (err){
@@ -43,8 +50,9 @@ router.get('/:search', function (req, res){
 
 router.get('/get/:id', function (req, res){
   let id = req.params.id;
+  var session = req.session;
 
-  CategoryLogic.get(id).then(function (category)
+  CategoryLogic.get(id, {email: session.email}).then(function (category)
   {
     res.send(category);
   }).catch(function (err){
@@ -56,8 +64,9 @@ router.get('/get/:id', function (req, res){
 router.post('/update/:id', function (req, res){
   let category = req.body;
   let id = req.params.id;
+  var session = req.session;
 
-  CategoryLogic.update(id, category).then(function (savedCategory)
+  CategoryLogic.update(id, category, {email: session.email}).then(function (savedCategory)
   {
     res.send(savedCategory);
   }).catch(function (err){
@@ -68,8 +77,9 @@ router.post('/update/:id', function (req, res){
 
 router.get('/delete/:id', function (req, res){
   let id = req.params.id;
+  var session = req.session;
 
-  CategoryLogic.delete(id).then(function (result)
+  CategoryLogic.delete(id, {email: session.email}).then(function (result)
   {
     res.send(result);
   }).catch(function (err){

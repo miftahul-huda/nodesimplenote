@@ -10,7 +10,8 @@ class NoteModel extends Model {
             tags: DataTypes.STRING,
             user: DataTypes.STRING,
             category_id: DataTypes.INTEGER,
-            project_id: DataTypes.INTEGER
+            project_id: DataTypes.INTEGER,
+            user: DataTypes.STRING
         }, 
         { sequelize, modelName: 'note', tableName: 'note', force: force });
     }

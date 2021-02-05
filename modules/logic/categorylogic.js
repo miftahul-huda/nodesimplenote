@@ -5,11 +5,12 @@ const { Op } = require("sequelize");
 
 class CategoryLogic {
 
-    static async create(category)
+    static async create(category, param)
     {
         let result = this.validateCreate(category);
         if(result.success){
             try {
+                category.user = param.email;
                 let newcategory = await CategoryModel.create(category);
                 result.payload = newcategory;
                 return  result;
@@ -27,10 +28,14 @@ class CategoryLogic {
 
     }
 
-    static async findAll()
+    static async findAll(param)
     {
         try{
-            let categorys  = await CategoryModel.findAll();
+            var where = null;
+            if(param.email != null)
+                where = { where: { user : {[Op.like] :  param.email } } };
+
+            let categorys  = await CategoryModel.findAll(where);
             return { success: true, payload: categorys }
         }
         catch (error)
@@ -43,19 +48,26 @@ class CategoryLogic {
 
 
 
-    static async findByKeyword(search)
+    static async findByKeyword(search, param)
     {
         try{
             let categorys  = await CategoryModel.findAll({
                 where: {
-                    [Op.or] : [
-                        {category_name: { [Op.like] : '%' + search + '%' }},
-                        {description: { [Op.like] : '%' + search + '%' }}
+                    [Op.and] :
+                    [
+                        {
+                            [Op.or] : [
+                                {category_name: { [Op.like] : '%' + search + '%' }},
+                                {description: { [Op.like] : '%' + search + '%' }}
+                            ]
+                        }
+                        ,
+                        {
+                            user: { [Op.like] : param.email }
+                        }
                     ]
-
                 }
-                ,
-                include: [ { model: ConnectionModel, as: 'connection' } ]
+                
             })
             return { success: true, payload: categorys }
         }
@@ -65,12 +77,15 @@ class CategoryLogic {
         }
     }
 
-    static async get(id)
+    static async get(id, param)
     {
         try{
-            let categorys  = await CategoryModel.findByPk(id);
+            let category  = await CategoryModel.findByPk(id);
 
-            return { success: true, payload: categorys }
+            if(param.email != null && category.user == param.email)
+                return { success: true, payload: category }
+            else
+                return { success: false, payload: null, message: 'Not allowed for ' + param.email }
         }
         catch (error)
         {
@@ -78,7 +93,7 @@ class CategoryLogic {
         }
     }
 
-    static async update(id,  category)
+    static async update(id,  category, param)
     {
         let result = this.validate(category);
         if(result.success){
@@ -100,7 +115,7 @@ class CategoryLogic {
 
     }
 
-    static async delete(id)
+    static async delete(id, param)
     {
         try{
             let result  = await CategoryModel.destroy({ 

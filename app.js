@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 
 
 
-app.use(session({secret: 'dynamicrestapi',saveUninitialized: true,resave: true}));
+app.use(session({secret: 'nodesimplenote',saveUninitialized: true,resave: true}));
 
 
 //Dynamic routing based on configuration

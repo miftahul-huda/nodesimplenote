@@ -5,7 +5,8 @@ class CategoryModel extends Model {
     { 
         super.init({
             category_name: DataTypes.STRING,
-            description: DataTypes.TEXT
+            description: DataTypes.TEXT,
+            user: DataTypes.STRING
         }, 
         { sequelize, modelName: 'category', tableName: 'category', force: force });
     }

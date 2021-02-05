@@ -7,11 +7,12 @@ const ProjectModel = require('../models/projectmodel');
 
 class NoteLogic {
 
-    static async create(note)
+    static async create(note, param)
     {
         let result = this.validateCreate(note);
         if(result.success){
             try {
+                note.user = param.email;
                 let newnote = await NoteModel.create(note);
                 result.payload = newnote;
                 return  result;
@@ -29,10 +30,15 @@ class NoteLogic {
 
     }
 
-    static async findAll()
+    static async findAll(param)
     {
         try{
+            var where = null;
+            if(param.email != null)
+                where = { user : {[Op.like] :  param.email } } ;
+
             let notes  = await NoteModel.findAll({ 
+                where: where,
                 attributes: [ 'id', 'title', 'short_desc', 'createdAt', 'tags','project_id' , 'category_id' ],
                 include: [
                     {  model: CategoryModel, as: 'category' },
@@ -49,19 +55,28 @@ class NoteLogic {
 
 
 
-    static async findByKeyword(search)
+    static async findByKeyword(search, param)
     {
         try{
+
             let notes  = await NoteModel.findAll({
                 attributes:  [ 'id', 'title', 'short_desc', 'createdAt', 'tags','project_id' , 'category_id' ],
                 where: {
-                    [Op.or] : [
-                        {title: { [Op.like] : '%' + search + '%' }},
-                        {short_desc: { [Op.like] : '%' + search + '%' }},
-                        {content: { [Op.like] : '%' + search + '%' }},
-                        {tags: { [Op.like] : '%' + search + '%' }}
+                    [Op.and] :       
+                    [
+                        {
+                            [Op.or] : [
+                                {title: { [Op.like] : '%' + search + '%' }},
+                                {short_desc: { [Op.like] : '%' + search + '%' }},
+                                {content: { [Op.like] : '%' + search + '%' }},
+                                {tags: { [Op.like] : '%' + search + '%' }}
+                            ]
+                        }
+                        ,
+                        {
+                            user : { [Op.like] : param.email }
+                        }
                     ]
-
                 }
                 ,
                 include: [
@@ -77,12 +92,15 @@ class NoteLogic {
         }
     }
 
-    static async get(id)
+    static async get(id, param)
     {
         try{
-            let notes  = await NoteModel.findByPk(id);
+            let note  = await NoteModel.findByPk(id);
 
-            return { success: true, payload: notes }
+            if(param.email != note.user)
+                return { success: false, payload: null, message: 'Not allowed for ' + param.email }
+            else
+                return { success: true, payload: note }
         }
         catch (error)
         {
@@ -90,7 +108,7 @@ class NoteLogic {
         }
     }
 
-    static async update(id,  note)
+    static async update(id,  note, param)
     {
         let result = this.validate(note);
         if(result.success){
@@ -112,7 +130,7 @@ class NoteLogic {
 
     }
 
-    static async delete(id)
+    static async delete(id, param)
     {
         try{
             let result  = await NoteModel.destroy({ 

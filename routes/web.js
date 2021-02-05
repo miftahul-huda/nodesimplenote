@@ -68,4 +68,37 @@ router.get("/project/edit/:id", function(req, res){
 });
 
 
+router.get("/signin", function(req, res){
+    var appSession = req.session;
+    var dir = __dirname;
+    var p = path.resolve( dir, "../public/pages/", "signin");
+    res.render(p, { session: appSession } )    
+});
+
+
+router.get("/signout", function(req, res){
+    var appSession = req.session;
+    appSession.email = null;
+    appSession.name = null;
+    
+    var dir = __dirname;
+    var p = path.resolve( dir, "../public/pages/", "signout");
+    res.render(p, { session: appSession } )    
+});
+
+router.get("/loggedin", function(req, res){
+    var appSession = req.session;
+    var id = req.query.id;
+    var email = req.query.email;
+    var name = req.query.name;
+    var image = req.query.photo;
+
+    appSession.id = id;
+    appSession.email = email;
+    appSession.name = name;
+    appSession.image = image;
+
+    res.redirect('/')  
+});
+
 module.exports = router;
