@@ -22,8 +22,6 @@ router.post('/create', function (req, res){
 router.get('', function (req, res){
 
   var session = req.session;
-  
-
   CategoryLogic.findAll({email: session.email}).then(function (categorys)
   {
     res.send(categorys);

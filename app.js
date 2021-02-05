@@ -7,6 +7,7 @@ var bodyParser = require('body-parser')
 const session = require('express-session');
 var Initialization = require("./initialization")
 
+
 const port = process.env.PORT;
 
 var ejs = require('ejs'); 
@@ -15,6 +16,8 @@ ejs.close = '}}';
 
 
 var app = express();
+const {Datastore} = require('@google-cloud/datastore');
+const {DatastoreStore} = require('@google-cloud/connect-datastore');
 
 //Consider all request as application/json
 app.use(express.json({type: '*/*'}));
@@ -23,7 +26,12 @@ app.use(bodyParser.json())
 
 
 
-app.use(session({secret: 'nodesimplenote',saveUninitialized: true,resave: true}));
+app.use(session({
+  store: new DatastoreStore({
+    dataset: new Datastore(),
+    kind: 'express-sessions',
+  }),
+  secret: 'nodesimplenote',saveUninitialized: true,resave: false}));
 
 
 //Dynamic routing based on configuration
