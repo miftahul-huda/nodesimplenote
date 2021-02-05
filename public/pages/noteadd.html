@@ -57,16 +57,22 @@
 <script>
     $(document).ready(function() {
 
+        <% if( mode=="view") { %>
+            disabled();
+        <% } %>
         $("#loader").show();
         loadProjects(function(projects){
             console.log(projects);
             displayProjects(projects);
             loadCategories(function(categories){
                 displayCategories(categories);
-                <% if( mode == "edit" ) { %>
+                <% if( mode == "edit" || mode=="view") { %>
                 loadNote(<%=id %>, function(note){
                     $("#loader").hide();
                     displayNote(note);
+
+
+
                 }, function(error){
                     errorLoadNote(error);
                     $("#loader").hide();
@@ -85,6 +91,16 @@
             location = "/web/notes";
         })
     });
+
+    function disabled()
+    {
+        $("input").attr("disabled", "disabled");
+        $("textarea").attr("disabled", "disabled");
+        $("#btn-register").hide();
+        $("#btn-register").parent().css("width", "0%");
+        $("#btn-register").parent().hide()
+        $("#btn-back").parent().css("width", "100%");
+    }
 
     function loadNote(id, callback, callbackError)
     {

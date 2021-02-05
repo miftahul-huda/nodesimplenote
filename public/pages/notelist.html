@@ -77,6 +77,7 @@ function loadNotes()
 
             for(var i=0; i < notes.length; i++)
             {
+                notes[i].view = "<div style='cursor: pointer' onclick='viewNote(" + notes[i].id + ")'><u>" + notes[i].title + "</u></div>"
                 notes[i].edit = "<div style='cursor: pointer' onclick='editNote(" + notes[i].id + ")'><image src='/images/edit.png'></div>"
                 notes[i].delete = "<div style='cursor: pointer' onclick='deleteNote(" + notes[i].id + ")'><image src='/images/trash.png'></div>"
             }
@@ -87,7 +88,7 @@ function loadNotes()
             table = $("#datatable").DataTable({
                 data: notes,
                 columns: [
-                    { title: "Title", data:"title"},
+                    { title: "Title", data:"view"},
                     { title: "Short Desc", data: "short_desc"},
                     { title: "Tags" , data: "tags"},
                     { title: "Category" , data: "category.category_name"},
@@ -126,6 +127,11 @@ function deleteNote(i)
 function editNote(i)
 {
     location = "/web/note/edit/" + i;
+}
+
+function viewNote(i)
+{
+    location = "/web/note/view/" + i;
 }
 
 function loadProjects(callback)

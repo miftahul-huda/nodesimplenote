@@ -40,6 +40,19 @@ router.get("/note/edit/:id", function(req, res){
     } 
 });
 
+router.get("/note/view/:id", function(req, res){
+    var appSession = req.session;
+
+    if(appSession == null || appSession.email == null)
+        res.redirect('/')
+    else
+    {
+        var dir = __dirname;
+        var p = path.resolve( dir, "../public/pages/", "noteadd");
+        res.render(p, { mode: "view", id: req.params.id} )   
+    } 
+});
+
 
 router.get("/categories", function(req, res){
     var appSession = req.session;
@@ -119,6 +132,7 @@ router.get("/project/edit/:id", function(req, res){
         res.render(p, { mode: "edit", id: req.params.id} )  
     }  
 });
+
 
 
 router.get("/signin", function(req, res){
