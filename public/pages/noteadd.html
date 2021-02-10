@@ -47,6 +47,10 @@
                 <div style="width: 45%; flex:1">
                     <button id="btn-back" style="width: 100%" type="button" class="btn btn-block btn-primary">Back</button>
                 </div>
+                <div style="width:1%"></div>
+                <div style="width: 45%; flex:1">
+                    <button id="btn-share" style="width: 100%" type="button" class="btn btn-block btn-primary">Share</button>
+                </div>
             </div>
         </form>
     </div>
@@ -56,6 +60,27 @@
 
 <script>
     $(document).ready(function() {
+
+        $("#btn-share").parent().hide()
+        $("#btn-share").hide();
+
+        $("#btn-share").click(function() {
+            share();
+        });
+
+        $("#content").summernote({
+            height: 400, 
+            toolbar: [['style', ['style']],
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['fontname', ['fontname']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video']],
+                        ['view', ['fullscreen', 'codeview', 'help']],
+                    ]
+        });
 
         <% if( mode=="view") { %>
             disabled();
@@ -99,7 +124,11 @@
         $("#btn-register").hide();
         $("#btn-register").parent().css("width", "0%");
         $("#btn-register").parent().hide()
-        $("#btn-back").parent().css("width", "100%");
+        $("#btn-back").parent().css("width", "50%");
+        $("#btn-share").parent().show()
+        $("#btn-share").show();
+        $("#btn-share").parent().css("width", "50%");
+
     }
 
     function loadNote(id, callback, callbackError)
@@ -150,6 +179,8 @@
         
         $("#title").val(note.title);
         $("#short_desc").val(note.short_desc);
+
+
         $("#content").summernote('code', note.content);
         $("#tags").val(note.tags);
         $("#project_id").val(note.project_id).trigger('change');
@@ -237,6 +268,12 @@
         categories.map(function(item){
             $("#category_id").append("<option value='" + item.id + "'>" + item.category_name + "</option>")
         });
+    }
+
+    function share()
+    {
+        var url = location.href.replace("view", "share");
+        prompt("Link to share", url);
     }
 
 </script>

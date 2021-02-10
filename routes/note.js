@@ -86,6 +86,18 @@ router.get('/get/:id', function (req, res){
   })
 })
 
+router.get('/share/:id', function (req, res){
+  let id = req.params.id;
+  var session = req.session;
+  NoteLogic.share(id).then(function (note)
+  {
+    res.send(note);
+  }).catch(function (err){
+    console.log("error")
+    res.send(err);
+  })
+})
+
 router.post('/update/:id', function (req, res){
   let note = req.body;
   let id = req.params.id;

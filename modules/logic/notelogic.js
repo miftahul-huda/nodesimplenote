@@ -195,6 +195,18 @@ class NoteLogic {
         }
     }
 
+    static async share(id)
+    {
+        try{
+            let note  = await NoteModel.findByPk(id);
+            return { success: true, payload: note }
+        }
+        catch (error)
+        {
+            throw { success: false, message: '', error: error };
+        }
+    }
+
     static async update(id,  note, param)
     {
         let result = this.validate(note);

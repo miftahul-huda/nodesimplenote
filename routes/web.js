@@ -53,6 +53,14 @@ router.get("/note/view/:id", function(req, res){
     } 
 });
 
+router.get("/note/share/:id", function(req, res){
+
+    var dir = __dirname;
+    var p = path.resolve( dir, "../public/pages/", "noteshare");
+    res.render(p, { mode: "view", id: req.params.id} )   
+
+});
+
 
 router.get("/categories", function(req, res){
     var appSession = req.session;
