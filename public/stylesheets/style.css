@@ -37,7 +37,7 @@ table.dataTable.no-footer {
 label
 {
   color: #555;
-  font-weight: 500!important;
+  font-weight: bold!important;
 }
 
 .dataTable
