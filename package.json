@@ -16,6 +16,7 @@
     "cookie-parser": "~1.4.4",
     "db-meta": "^0.5.1",
     "debug": "~2.6.9",
+    "dotenv": "^16.0.0",
     "ejs": "^3.1.5",
     "express": "^4.16.4",
     "express-formidable": "^1.2.0",

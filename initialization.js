@@ -14,6 +14,8 @@ const sequelize = new Sequelize(process.env.DBNAME, process.env.DBUSER, process.
 class Initialization {
     static async initializeDatabase(){
 
+        console.log("Initializing Database")
+        console.log(process.env.DBHOST)
         let force = false;
 
         ProjectModel.initialize(sequelize, false);
@@ -24,7 +26,7 @@ class Initialization {
         NoteModel.belongsTo(ProjectModel, {foreignKey: 'project_id'});
 
         await sequelize.sync();
-
+        console.log("Done Initializing Database")
     }
 }
 

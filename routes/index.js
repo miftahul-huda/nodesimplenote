@@ -10,4 +10,10 @@ router.get('/', function(req, res, next) {
     res.redirect('/web/signin')
 });
 
+router.get('/callback', function(req, res, next) {
+  var session = req.session;
+  res.send("OK");
+});
+
+
 module.exports = router;

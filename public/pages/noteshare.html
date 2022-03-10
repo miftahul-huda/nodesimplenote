@@ -3,23 +3,17 @@
 <head>
 <%- include ("./headerscript.html") -%>
 </head>
-<body>
+<body style="padding: 1%;">
 
 
     <div class="card-body">
         <form>
             <div class="position-relative form-group">
-                <label for="title" class="">Title</label>
-                <input readonly style="background-color: #fff;" id="title" placeholder="Enter title for the note" type="text" class="form-control">
+                <input readonly style="border:0; background-color: #fff; font-weight: bold;" id="title" placeholder="Enter title for the note" type="text" class="form-control">
             </div>
             <div class="position-relative form-group">
-                <label for="short_desc" class="">Short Description</label>
-                <input readonly style="background-color: #fff;" id="short_desc" placeholder="Enter short description" type="text" class="form-control">
-            </div>
-            <div class="position-relative form-group">
-                <label for="content" class="">Content</label>
-                <textarea readonly id="content" placeholder="" class="form-control">
-                </textarea>
+                <div id="content" style="padding: 5px">
+                </div>
             </div>
 
         </form>
@@ -95,10 +89,11 @@
         
         $("#title").val(note.title);
         $("#short_desc").val(note.short_desc);
-        $("#content").summernote({ height: 800, toolbar: []});
-        $("#content").summernote('code', note.content);
-        $('#content').next().find(".note-editable").attr("contenteditable", false);
-        $('#content').next().find(".note-editable").css("background-color", '#fff');
+        $("#content").html(note.content);
+        //$("#content").summernote({ height: 800, toolbar: []});
+        //$("#content").summernote('code', note.content);
+        //$('#content').next().find(".note-editable").attr("contenteditable", false);
+        //$('#content').next().find(".note-editable").css("background-color", '#fff');
         $("#tags").val(note.tags);
     }
 

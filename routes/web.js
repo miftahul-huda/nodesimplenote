@@ -6,12 +6,12 @@ router.get("/notes", function(req, res){
     var appSession = req.session;
 
     if(appSession == null || appSession.email == null)
-        res.redirect('/')
+        return res.redirect('/')
     else
     {
         var dir = __dirname;
         var p = path.resolve( dir, "../public/pages/", "notelist");
-        res.render(p)    
+        return res.render(p)    
     }
 });
 
@@ -144,10 +144,14 @@ router.get("/project/edit/:id", function(req, res){
 
 
 router.get("/signin", function(req, res){
+
+    console.log("/signin")
     var appSession = req.session;
     var dir = __dirname;
     var p = path.resolve( dir, "../public/pages/", "signin");
-    res.render(p, { session: appSession } )   
+    return res.render(p, { session: appSession } )   
+    //res.send("Test")
+    
 });
 
 
@@ -171,7 +175,9 @@ router.get("/loggedin", function(req, res){
     appSession.id = id;
     appSession.email = email;
     appSession.name = name;
-    appSession.image = image;
+    appSession.image = image;   
+
+    console.log("/loggedin")
 
     res.redirect('/')  
 });

@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -8,7 +9,7 @@ const session = require('express-session');
 var Initialization = require("./initialization")
 
 
-const port = process.env.PORT;
+const port = process.env.APPLICATION_PORT;
 
 var ejs = require('ejs'); 
 ejs.open = '{{'; 
@@ -19,10 +20,19 @@ var app = express();
 const {Datastore} = require('@google-cloud/datastore');
 const {DatastoreStore} = require('@google-cloud/connect-datastore');
 
+
 //Consider all request as application/json
-app.use(express.json({type: '*/*'}));
+app.use(express.json({type: '*/*', limit: '100mb'}));
 // parse application/json
 app.use(bodyParser.json())
+
+
+// set the view engine to ejs
+
+app.set("view options", {layout: false});  
+app.engine('html', require('ejs').renderFile); 
+app.set('view engine', 'html');
+app.set('views', __dirname + "/public/pages");
 
 
 
@@ -44,16 +54,10 @@ routers.forEach(function (route){
 })
 
 
-// set the view engine to ejs
-app.set("view options", {layout: false});  
-app.engine('html', require('ejs').renderFile); 
-app.set('view engine', 'html');
-app.set('views', __dirname + "/public/pages");
-
-
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
 //app.set('view engine', 'jade');
+
 
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
@@ -63,9 +67,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // catch 404 and forward to error handler
+/*
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -75,13 +81,16 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send('error');
 });
+*/
 
 
-app.listen(port)
+
+
 Initialization.initializeDatabase();
 
+app.listen(port)
 
 console.log("\n\n==================================================\nApplication     : Node Simple Note\nPort\t\t: " + port + "\n==================================================\n\n\n")
 console.log("RUNNING.....\n\n")

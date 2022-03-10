@@ -1,0 +1,11 @@
+service: node-simple-note
+runtime: nodejs12
+env: standard
+env_variables:
+  PORT: "8080"
+  DBHOST: "10.103.112.3"
+  DBNAME: "nodesimplenote"
+  DBUSER: "nodeuser"
+  DBPASSWORD: "rotikeju98"
+vpc_access_connector:
+  name: projects/huda-playground/locations/asia-east2/connectors/appenginecloudsql
