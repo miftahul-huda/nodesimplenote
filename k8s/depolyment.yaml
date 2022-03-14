@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: node-simple-note
+  name: node-simple-note
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: node-simple-note
+  template:
+    metadata:
+      labels:
+        run: node-simple-note
+    spec:
+      containers:
+      - image: gcr.io/huda-playground/node-simple-note:latest
+        name: node-simple-note
+        ports:
+        - containerPort: 8080

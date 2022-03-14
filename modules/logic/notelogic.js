@@ -39,6 +39,8 @@ class NoteLogic {
 
             let notes  = await NoteModel.findAll({ 
                 where: where,
+                order:
+                [[ 'createdAt', 'DESC' ]],
                 attributes: [ 'id', 'title', 'short_desc', 'createdAt', 'tags','project_id' , 'category_id' ],
                 include: [
                     {  model: CategoryModel, as: 'category' },
@@ -60,6 +62,8 @@ class NoteLogic {
 
             let notes  = await NoteModel.findAll({ 
                 where: this.getWhere(param, project, category),
+                order:
+                [[ 'createdAt', 'DESC' ]],
                 attributes: [ 'id', 'title', 'short_desc', 'createdAt', 'tags','project_id' , 'category_id' ],
                 include: [
                     {  model: CategoryModel, as: 'category' },
@@ -100,6 +104,8 @@ class NoteLogic {
                     ]
                 }
                 ,
+                order:
+                [[ 'createdAt', 'DESC' ]],
                 include: [
                     {  model: CategoryModel, as: 'category' },
                     {  model: ProjectModel, as: 'project' }
@@ -166,6 +172,8 @@ class NoteLogic {
                 attributes:  [ 'id', 'title', 'short_desc', 'createdAt', 'tags','project_id' , 'category_id' ],
                 where: this.getSeearchWhere(param, search, project, category)
                 ,
+                order:
+                [[ 'createdAt', 'DESC' ]],
                 include: [
                     {  model: CategoryModel, as: 'category' },
                     {  model: ProjectModel, as: 'project' }
