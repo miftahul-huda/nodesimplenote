@@ -9,7 +9,7 @@ steps:
   args: [
    'build', 
    '-t', 
-   'gcr.io/$PROJECT_ID/node-simple-note:$TAG_NAME',
+   'gcr.io/$PROJECT_ID/node-simple-note:$BRANCH_NAME-$COMMIT_SHA',
    '-t', 
    'gcr.io/$PROJECT_ID/node-simple-note:latest',
    '.'
