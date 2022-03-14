@@ -27,20 +27,20 @@ steps:
    '.'
   ]
   secretEnv: ['DBHOST', 'DBNAME', 'DBUSER', 'DBPASSWORD', 'APPLICATION_PORT' , 'GCP_PROJECT']
-  availableSecrets:
-    secretManager:
-    - versionName: projects/$PROJECT_ID/secrets/NSN_DBHOST/versions/1
-      env: 'DBHOST'
-    - versionName: projects/$PROJECT_ID/secrets/NSN_DBNAME/versions/1
-      env: 'DBNAME' 
-    - versionName: projects/$PROJECT_ID/secrets/NSN_DBUSER/versions/1
-      env: 'DBUSER' 
-    - versionName: projects/$PROJECT_ID/secrets/NSN_DBPASSWORD/versions/1
-      env: 'DBPASSWORD' 
-    - versionName: projects/$PROJECT_ID/secrets/NSN_APPPORT/versions/1
-      env: 'APPLICATION_PORT' 
-    - versionName: projects/$PROJECT_ID/secrets/NSN_GCPPROJECT/versions/1
-      env: 'GCP_PROJECT' 
+availableSecrets:
+  secretManager:
+  - versionName: projects/$PROJECT_ID/secrets/NSN_DBHOST/versions/1
+    env: 'DBHOST'
+  - versionName: projects/$PROJECT_ID/secrets/NSN_DBNAME/versions/1
+    env: 'DBNAME' 
+  - versionName: projects/$PROJECT_ID/secrets/NSN_DBUSER/versions/1
+    env: 'DBUSER' 
+  - versionName: projects/$PROJECT_ID/secrets/NSN_DBPASSWORD/versions/1
+    env: 'DBPASSWORD' 
+  - versionName: projects/$PROJECT_ID/secrets/NSN_APPPORT/versions/1
+    env: 'APPLICATION_PORT' 
+  - versionName: projects/$PROJECT_ID/secrets/NSN_GCPPROJECT/versions/1
+    env: 'GCP_PROJECT' 
 #step 3
 - name: 'gcr.io/cloud-builders/kubectl'
   args: ['apply', '-f', 'k8s/']
