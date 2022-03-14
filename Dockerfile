@@ -8,13 +8,14 @@ ARG APPLICATION_PORT
 FROM node:16
 RUN npm install -g pm2
 
+
 RUN echo "$DBHOST"
 
 # Create app directory
 WORKDIR /app
 
 # Bundle app source
-COPY . .
+COPY ./nodesimplenote/* .
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
