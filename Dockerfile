@@ -15,7 +15,7 @@ RUN echo "$DBHOST"
 WORKDIR /app
 
 # Bundle app source
-COPY ./nodesimplenote ./
+COPY . .
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
