@@ -26,7 +26,7 @@ RUN npm install
 # If you are building your code for production
 # RUN npm ci --only=production
 
-RUN node dbinit.js
+#RUN node dbinit.js
 
 EXPOSE 8080
 CMD [ "node", "app.js" ]

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nodesimplenote-config
+  labels:
+    app: node-simple-note
+data:
+  DBHOST: 34.67.143.103
+  DBNAME: nodesimplenote
+  DBUSER: nodeuser
+  DBPASSWORD: RotiKeju98*
+  APPLICATION_PORT: 8080
+  GCP_PROJECT: huda-playground

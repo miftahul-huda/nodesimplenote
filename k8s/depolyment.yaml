@@ -19,3 +19,6 @@ spec:
         name: node-simple-note
         ports:
         - containerPort: 8080
+        envFrom:
+          - configMapRef:
+              name: nodesimplenote-config
