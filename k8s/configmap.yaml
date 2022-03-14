@@ -1,5 +1,5 @@
-apiVersion: v1
 kind: ConfigMap
+apiVersion: v1
 metadata:
   name: nodesimplenote-config
   labels:
@@ -9,5 +9,5 @@ data:
   DBNAME: nodesimplenote
   DBUSER: nodeuser
   DBPASSWORD: RotiKeju98*
-  APPLICATION_PORT: 8080
+  APPLICATION_PORT: '8080'
   GCP_PROJECT: huda-playground
