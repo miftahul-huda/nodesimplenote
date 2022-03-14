@@ -1,9 +1,11 @@
 steps:
-#step 1 Clone the git repo
-- name: 'gcr.io/cloud-builders/git'
-  id: 'Clone'
-  args: ['clone', 'https://github.com/miftahul-huda/nodesimplenote.git']
-
+#step 1
+- name: 'gcr.io/cloud-builders/docker' 
+  entrypoint: 'bash'
+  args: [
+   '-c', 
+   'docker pull gcr.io/$PROJECT_ID/node-simple-note:latest || exit 0'
+  ]
 #step 2
 - name: gcr.io/cloud-builders/docker
   args: [
