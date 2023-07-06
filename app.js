@@ -7,6 +7,8 @@ var logger = require('morgan');
 var bodyParser = require('body-parser')
 const session = require('express-session');
 var Initialization = require("./initialization")
+var cors = require('cors')
+
 
 
 const port = process.env.APPLICATION_PORT;
@@ -25,6 +27,7 @@ const {DatastoreStore} = require('@google-cloud/connect-datastore');
 app.use(express.json({type: '*/*', limit: '100mb'}));
 // parse application/json
 app.use(bodyParser.json())
+app.use(cors())
 
 
 // set the view engine to ejs

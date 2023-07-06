@@ -1,0 +1,9 @@
+service: node-simple-note
+runtime: nodejs16
+env: standard
+env_variables:
+  APPLICATION_PORT: 8080
+  DBHOST: localhost
+  DBNAME: nodesimplenote
+  DBUSER: nodeuser
+  DBPASSWORD: RotiKeju98*
